@@ -4,21 +4,21 @@
 #
 # usage:  '. loadEnv' or 'source loadEnv' 
 
-# ENVIRONMENT_FILES: comma "," separated list of all environment files to collect. 
-#                    highest priority at the end 
+# ENVIRONMENT_FILES: comma "," separated list of environment files to collect. 
+#                    Highest priority at the end.
 export ENVIRONMENT_FILES=development/dev.env,development/dev.override.env
 
 # GENERATE_ENCRYPTED_ENV_FILES: Flag to generate encrypted environment files.
-#        1: generate encrypted collected.env.vault and export_collected.env.vault
-#           ensure ansible-vault is installed when set to '1' 
+#        1: generate encrypted files. (export_)collected.env.vault
+#           Ensure ansible-vault is installed when set to '1'.
 #           (pip3 install ansible-vault)
-#        0: no encrypted files will be generated 
+#        0: no encrypted files will not be generated 
 GENERATE_ENCRYPTED_ENV_FILES=1
 
 # VAULT_PASSWORD_FILES: file to use as encryption key for `ansible-vault`
 VAULT_PASSWORD_FILES=~/.ssh/ansible-vault
 
-#############################################################################
+##############################################################################
 # Nothing to change below
 SCRIPT_DIR="$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )"
 pushd "$SCRIPT_DIR" > /dev/null || exit
