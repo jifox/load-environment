@@ -41,7 +41,7 @@ $ python3 -m venv .
 $ . bin/activate
 
 # Install ansible-vault
-$ pip3 install ansible-vault
+$ pip3 install -r loadenv_requirements.txt
 
 # Test installation
 $ ansible-vault --help
