@@ -1,0 +1,46 @@
+# File: loadenv
+# 
+# Script to set environment variables in current terminal
+#
+# usage:  '. loadEnv' or 'source loadEnv' 
+
+# ENVIRONMENT_FILES: comma "," separated list of all environment files to collect. 
+#                    highest priority at the end 
+export ENVIRONMENT_FILES=development/dev.env,development/dev.override.env
+
+# GENERATE_ENCRYPTED_ENV_FILES: Flag to generate encrypted environment files.
+#        1: generate encrypted collected.env.vault and export_collected.env.vault
+#           ensure ansible-vault is installed when set to '1' 
+#           (pip3 install ansible-vault)
+#        0: no encrypted files will be generated 
+GENERATE_ENCRYPTED_ENV_FILES=1
+
+# VAULT_PASSWORD_FILES: file to use as encryption key for `ansible-vault`
+VAULT_PASSWORD_FILES=~/.ssh/ansible-vault
+
+#############################################################################
+# Nothing to change below
+SCRIPT_DIR="$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )"
+pushd "$SCRIPT_DIR" > /dev/null || exit
+
+if [ "${GENERATE_ENCRYPTED_ENV_FILES}" == "1" ]; then
+  # Calculate md5 checksum before creating collected.env
+  touch collected.env
+  md5sum collected.env > /tmp/check_modified.md5
+fi
+
+./collect_env.py
+source export_collected.env
+
+if [ "${GENERATE_ENCRYPTED_ENV_FILES}" == "1" ]; then
+  # Test if collected.env has been changed and encrypt if modified
+  md5sum --check --quiet /tmp/check_modified.md5 2>/dev/null > /dev/null
+  if [ $? -gt 0 ]; then
+    ansible-vault encrypt --vault-password-file ${VAULT_PASSWORD_FILES} --output collected.env.vault         collected.env
+    ansible-vault encrypt --vault-password-file ${VAULT_PASSWORD_FILES} --output export_collected.env.vault  export_collected.env
+  fi
+fi
+
+if [ -f  local_bash_rc.sh ]; then
+  ./local_bash_rc.sh
+fi

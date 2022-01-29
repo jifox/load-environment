@@ -1,0 +1,19 @@
+{
+  // Use IntelliSense to learn about possible attributes.
+  // Hover to view descriptions of existing attributes.
+  // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+  "version": "0.2.0",
+  "configurations": [
+
+    {
+      "name": "Python: collect_env.py",
+      "type": "python",
+      "request": "launch",
+      "program": "${workspaceFolder}/collect_env.py",
+      "console": "integratedTerminal",
+      "env": {
+        "ENVIRONMENT_FILES": "./example/dev/file1.env,./example/prod/file2.env"
+      }
+    }
+  ]
+}
