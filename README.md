@@ -4,12 +4,12 @@ This repository helps to setup a 12-factor compatible development environment.
 
 ## Configuration
 
-Edit the `loadEnv` file and set this variables at the top of the file
+Edit the `loadEnv` file and set this variables at the top of the file.
 
 ```bash
 # ENVIRONMENT_FILES: comma "," separated list of all environment files to collect. 
 #                    highest priority at the end 
-export ENVIRONMENT_FILES=development/dev.env,development/dev.override.env
+export ENVIRONMENT_FILES=./example/dev/file1.env,./example/prod/file2.env
 
 # GENERATE_ENCRYPTED_ENV_FILES: Flag to generate encrypted environment files.
 #        1: generate encrypted collected.env.vault and export_collected.env.vault
@@ -22,11 +22,40 @@ GENERATE_ENCRYPTED_ENV_FILES=1
 VAULT_PASSWORD_FILES=~/.ssh/ansible-vault
 ```
 
+When activating encryption with `GENERATE_ENCRYPTED_ENV_FILES=1` ansible-vault must be installed.
 
+```bash
+# Setup a virtual python environment if required
+$ python3 -m venv .
+$ . bin/activate
 
+# Install ansible-vault
+$ pip3 install ansible-vault
 
+# test installation
+$ ansible-vault --help
+usage: ansible-vault [-h] [--version] [-v] {create,decrypt,edit,view,encrypt,encrypt_string,rekey} ...
 
+encryption/decryption utility for Ansible data files
 
+positional arguments:
+  {create,decrypt,edit,view,encrypt,encrypt_string,rekey}
+    create              Create new vault encrypted file
+    decrypt             Decrypt vault encrypted file
+    edit                Edit vault encrypted file
+    view                View vault encrypted file
+    encrypt             Encrypt YAML file
+    encrypt_string      Encrypt a string
+    rekey               Re-key a vault encrypted file
+
+optional arguments:
+  --version             show program's version number, config file location, configured module search path, module
+                        location, executable location and exit
+  -h, --help            show this help message and exit
+  -v, --verbose         verbose mode (-vvv for more, -vvvv to enable connection debugging)
+
+See 'ansible-vault <command> --help' for more information on a specific command.
+```
 
 ## Script: collected_env.py
 

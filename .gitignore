@@ -1,4 +1,11 @@
+.vscode/
+bin/
+lib/
+lib64/
+share/
+
 .env
 *.env
 !example/dev/file1.env
 !example/prod/file2.env
+pyvenv.cfg
