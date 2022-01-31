@@ -6,7 +6,7 @@
 
 # ENVIRONMENT_FILES: comma "," separated list of environment files to collect. 
 #                    Highest priority at the end.
-export ENVIRONMENT_FILES=development/dev.env,development/dev.override.env
+export ENVIRONMENT_FILES=example/dev/file1.env,example/prod/file2.env
 
 # GENERATE_ENCRYPTED_ENV_FILES: Flag to generate encrypted environment files.
 #        1: generate encrypted files. (export_)collected.env.vault
