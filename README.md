@@ -1,13 +1,60 @@
-# Load Environment Variables
+# Collect-Env
 
-This repository helps to setup a 12-factor compatible development environment.
+Collect-Env helps to setup 12-factor compatible (development) environments.
 
-The output is a file containig all vars collected from a given list of `.env` files.
+## Features
 
-## Results
+- **init_collect - Python helper for installation**
+  - Install required scripts
+  - optionally install auto-run functionality triggerd by python virtualenv activation
+  - `local_bash_rc.sh` script to further initialize the environment (e.g. start development containers).
+- **loadEnv - bash script**
+  - optional: encrypt files on change
+- **Collect multiple .env files**
+  - write merged .env variables to `collected.env`
+  - write merged .env variables as `export VAR=xxx` statements to `export_collected.env`
+- **Optionally use `ansible-vault` to create encrypted files**
+
+  This allows storing in git repository.
+
+  - uses **key-file** or **password-based** encryption is supported.
+  - encrypted content of `collected.env` is stord in `collected.env.vault`
+  - encrypted content of `export_collected.env` is stord in `export_collected.env.vault`
+
+## Configuration
+
+To initialize the collect-env environment run  `init_collect_env`.
+
+```bash
+$ init_collect_env
+usage: init_collect_env.py [-h] [-i INST_PATH] [-a] [-d] [-e] [-l]
+                           [-p PASSWORD_FILE] [-v ANSIBLE_VAULT_PATH]
+                           env-files
+
+positional arguments:
+  env-files             Comma delimeted list of .env files to collect (e.g.
+                        low-prio.env,higher-prio.env,highest-prio.env).
+
+optional arguments:
+  -h, --help            show this help message and exit
+  -i INST_PATH, --inst_path INST_PATH
+                        Installation path (Default: current directory).
+  -a, --auto-activate   Automatically call loadEnv on venv activation.
+  -d, --decrypt         Search for '*.env.vault', decrypt to '*.env' and
+                        exit.
+  -e, --enable-encryptinion
+                        Enable the creation of encrypted '*.env.vault' files.
+  -l, --list-env-files  Recursivly list all *.env in '-i INST_PATH' and exit.
+  -p PASSWORD_FILE, --vault-password-file PASSWORD_FILE
+                        Ansible-vault password file (Required if option '-e'
+                        is set).
+  -v ANSIBLE_VAULT_PATH, --ansible-vault-path ANSIBLE_VAULT_PATH
+                        Path of 'ansible-vault'. (Required if option '-e' is
+                        set and not in $PATH)
+```
 
 - all collected environment variables are defined in current terminal session
-- `collected.env` contains the merged environment variables
+- `collected.env` contains all merged environment variables
 - `export_collected.env` contains export statements for all environment variables
 - if `GENERATE_ENCRYPTED_ENV_FILES == 1`
   - `collected_env.vault` is the encrypted `collected.env` file

@@ -4,7 +4,18 @@
   // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
   "version": "0.2.0",
   "configurations": [
-
+    {
+      "name": "Python: init_collect_env.py",
+      "type": "python",
+      "request": "launch",
+      "program": "${workspaceFolder}/init_collect_env.py",
+      "args": [
+        "-l",
+        "-x", ".cache,.vscode-server,/lib/",
+        "-i", "/home/admin/dev-nautobot"
+      ],
+      "console": "integratedTerminal"
+    },
     {
       "name": "Python: collect_env.py",
       "type": "python",

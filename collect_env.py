@@ -53,7 +53,5 @@ class CollectEnvVars():
         Path("export_collected.env").chmod(0o600)
 
 
-
-
 if __name__ == "__main__":
     collectEnvVars = CollectEnvVars()
