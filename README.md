@@ -6,7 +6,7 @@ Collect-Env helps to setup 12-factor compatible (development) environments.
 
 - **init_collect - Python helper for installation**
   - Install required scripts
-  - optionally install auto-run functionality triggerd by python virtualenv activation
+  - optionally install auto-run functionality triggerd during python virtualenv activation
   - `local_bash_rc.sh` script to further initialize the environment (e.g. start development containers).
 - **loadEnv - bash script**
   - optional: encrypt files on change
