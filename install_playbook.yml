@@ -1,0 +1,83 @@
+- name: Install load-environment in target directory
+  hosts: localhost
+  connection: local
+  become: false
+  gather_facts: false
+
+  vars:
+    install_directory: "/home/ansible/nautobot-development/nautobot-plugin-ssot"  # set this to the directory where you want to install the load-environment script
+
+  tasks:
+  - name: Check if target directory
+    stat:
+      path: "{{ install_directory }}"
+    register: install_directory_stat
+
+  - name: Fail if target directory does not exist
+    fail:
+      msg: "Target directory does not exist"
+    when: not install_directory_stat.stat.exists
+
+  - name: Fail if target directory is not a directory
+    fail:
+      msg: "Target directory is not a directory"
+    when: not install_directory_stat.stat.isdir
+
+  - name: Check if pyproject.toml exists in target directory
+    stat:
+      path: "{{ install_directory }}/pyproject.toml"
+    register: pyproject_toml_stat
+
+  - name: Set Flag if pyproject.toml exists in target directory
+    set_fact:
+      pyproject_toml_exists: "{{ pyproject_toml_stat.stat.exists }}"
+
+  - name: Fail if pyproject_toml_exists is false
+    fail:
+      msg: "pyproject.toml does not exist in: {{ install_directory }}"
+    when: not pyproject_toml_exists
+
+  - name: Install with poetry
+    block:
+    - name: Get the info about the virtual environment if pyproject.toml exists in target directory
+      command: "bash -c 'unset VIRTUAL_ENV && cd {{ install_directory }} && poetry env info --path'"
+      register: poetry_env_info
+
+    - name: Get python3 in virtual environment
+      set_fact:
+        pip_in_venv: "{{ poetry_env_info.stdout_lines[0] }}/bin/pip"
+    - name: Display poetry_env_info
+      debug:
+        var: pip_in_venv
+
+    - name: Upgrade pip in virtual environment
+      command: "{{ pip_in_venv }} install --upgrade pip"
+
+    - name: install ansible-vault via module pip in virtual environment
+      pip:
+        name: ansible-vault
+        executable: "{{ pip_in_venv }}"
+
+    - name: Copy executeable files to target directory
+      copy:
+        src: "{{ item }}"
+        dest: "{{ install_directory }}"
+        mode: 0755
+      loop:
+        - collect_env.py
+        - init_collect_env.py
+        - local_bash_rc.sh
+
+    - name: Copy bash source files to target directory
+      copy:
+        src: "loadEnv"
+        dest: "{{ install_directory }}"
+
+    - name: Copy Readme to target directory
+      copy:
+        src: "README.md"
+        dest: "{{ install_directory }}/README.loadEnv.md"
+
+    when: pyproject_toml_exists
+
+
